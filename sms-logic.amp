@@ -1,0 +1,89 @@
+%%[
+
+/* RETRIEVING FIELDS FROM SENDING DE */
+
+SET @firstName = [FirstName]
+SET @loyaltyTier = [LoyaltyTier]
+SET @preferredCategory = [PreferredCategory]
+SET @lastPurchaseDate = [LastPurchaseDate]
+SET @customerID = [CustomerID]
+SET @points = [Points]
+
+
+/* FIRST NAME LOGIC */
+
+IF NOT EMPTY(@firstName) THEN
+  SET @firstNameTrimmed = Trim(@firstName)
+  SET @firstNamePropercased = Propercase(@firstNameTrimmed)
+  SET @firstNameFinal = @firstNamePropercased
+ELSE
+  SET @firstNameFinal = "there"
+ENDIF
+
+/* CALCULATE CURRENT DATE */
+
+SET @systemDate = Now(1)
+SET @currentDate = SystemDateToLocalDate(@systemDate)
+
+
+/* DAYS SINCE LAST PURCHASE - LOGIC */
+
+SET @daysSinceLastPurchase = DateDiff(@lastPurchaseDate, @currentDate, "D")
+
+
+/* DISCOUNT PERCENTAGE & LOYALTY TIER INITIAL - LOGIC */
+
+/* VIP */
+IF @loyaltyTier == "VIP" THEN
+  
+  SET @loyaltyTierInitial = "V"
+   
+  /* CUSTOMERS WHO HAVE MADE PURCHASE IN LAST 90 DAYS */
+  IF @daysSinceLastPurchase <= 90 THEN
+    SET @discount = "30%"
+  /* CUSTOMERS WHO HAVE MADE PURCHASE OUTSIDE OF THE LAST 90 DAYS */
+  ELSE
+    SET @discount = "20%"
+  ENDIF
+  
+/* Silver*/ 
+ELSEIF @loyaltyTier == "Silver" THEN
+  
+  SET @loyaltyTierInitial = "S"
+  SET @discount = "15%"
+  
+/* Bronze */
+ELSE
+
+  SET @loyaltyTierInitial = "B"
+  SET @discount = "10%"
+
+ENDIF
+
+/* DISCOUNT CODE - LOGIC */
+
+SET @discountCode = Concat("BF24", @customerID, @loyaltyTierInitial)
+
+/* DAYS UNTIL BLACK FRIDAY - LOGIC */
+
+SET @blackFridayDate = "2024-11-29"
+SET @daysLeftUntilBF = DateDiff(@currentDate, @blackFridayDate, "D")
+
+
+/* PERSONALIZED LINK & ACCESS TYPE - LOGIC */
+
+/* VIP */
+IF @loyaltyTier == "VIP" THEN
+
+  SET @personalizedLink = "shop.com/vip-early-access"
+  SET @accessType = "VIP Access"
+  
+/* Silver + Bronze */
+ELSE
+
+  SET @personalizedLink = "shop.com/early-access"
+  SET @accessType = "Exclusive Access"
+
+ENDIF
+
+]%%
