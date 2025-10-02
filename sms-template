@@ -1,0 +1,5 @@
+Hi %%=v(@firstNameFinal)=%%! %%=v(@accessType)=%% to our Black Friday Sale! Use code %%=v(@discountCode)=%% for %%=v(@discount)=%% off. Check out your favourite %%=v(@preferredCategory)=%% styles! Use your %%=FormatNumber(@points,"#,###")=%% points & get early access here: %%=v(@personalizedLink)=%%.
+
+Only %%=v(@daysLeftUntilBF)=%% days left, <3 Hurry! 
+
+Reply Unsub to opt out of Marketing Messages
